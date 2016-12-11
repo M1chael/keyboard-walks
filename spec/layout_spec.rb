@@ -2,8 +2,7 @@ require_relative '../lib/layout.rb'
 
 describe Layout do
 
-  WD = File.expand_path(File.dirname(__FILE__))
-  let(:layout) { Layout.new(File.join(WD, '..', 'test', 'config.yml')) }
+  let(:layout) { Layout.new(File.join(File.expand_path(File.dirname(__FILE__)), '..', 'test', 'config.yml')) }
 
   describe '#get_way' do
     it 'should return direction for neighbours which are presented without shifting' do
@@ -22,7 +21,7 @@ describe Layout do
       expect(layout.get_way('!', '2').shifted?).to be false
     end
 
-    it 'should return direction' do
+    it 'should return direction for both shifted' do
       expect(layout.get_way('!', '@').direction).to eq('r')
     end
 
@@ -53,6 +52,14 @@ describe Layout do
     it 'should return shifted state for symbol itself with both shifted' do
       expect(layout.get_way('!', '!').shifted?).to be true
     end
+
+    it 'should return shortest path between non-neighbours' do
+      expect(layout.get_way('3', 'q').direction).to eq('ld;l')
+    end
+
+    it 'should return shortest path between non-neighbours with second shifted' do
+      expect(layout.get_way('z', '@').direction).to eq('lt;lt;rt')
+    end
   end
 
   describe '#get_symbol' do
@@ -82,6 +89,10 @@ describe Layout do
 
     it 'should return shifted neighbour for shifted symbol' do
       expect(layout.get_symbol('!', Way.new(direction: 'rd', shifted: true))).to eq('Q')
+    end
+
+    it 'should return non-neighbour' do
+      expect(layout.get_symbol('1', Way.new(direction: 'r;rd;rd'))).to eq('s')
     end
   end
 end

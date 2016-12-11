@@ -12,9 +12,24 @@ class Layout
 
 	def get_way(from, to)
 		from = @layout.key?(from) ? from : unshift(from)
-		@layout.key?(to) ? 
-			Way.new(direction: @layout[from].key(to)) : 
-			Way.new(direction: @layout[from].key(unshift(to)), shifted: true)
+		shifted = false
+		if !@layout.key?(to)
+			to = unshift(to)
+			shifted = true
+		end
+		return Way.new(direction: nil, shifted: shifted) if from == to
+		queue, pathes = Array.new, Hash.new
+		queue.push(from)
+		while !queue.empty? do
+			symbol = queue.shift
+			return Way.new(direction: pathes[symbol], shifted: shifted) if symbol == to
+			get_neighbours(symbol).each do |neighbour, direction|
+				if !pathes.keys.include?(neighbour)
+					queue.push(neighbour)
+					pathes[neighbour] = pathes[symbol].nil? ? direction : [pathes[symbol], direction].join(';')
+				end
+			end
+		end
 	end
 
 	def get_symbol(symbol, way)
@@ -34,7 +49,18 @@ class Layout
 	private
 
 	def get_neighbour(symbol, direction)
-		@layout[symbol][direction]
+		direction.split(';').each do |direction|
+			symbol = @layout[symbol][direction] if !symbol.empty?
+		end
+		return symbol
+	end
+
+	def get_neighbours(symbol)
+		neighbours = Hash.new
+		@layout[symbol].each do |direction, neighbour|
+			neighbours[neighbour] = direction if !neighbour.empty? && direction != 'sh'
+		end
+		return neighbours
 	end
 
 	def unshift(symbol)

@@ -3,8 +3,7 @@ require_relative '../lib/template.rb'
 
 describe Template do
 
-  WD = File.expand_path(File.dirname(__FILE__))
-  let(:layout) { Layout.new(File.join(WD, '..', 'test', 'config.yml')) }
+  let(:layout) { Layout.new(File.join(File.expand_path(File.dirname(__FILE__)), '..', 'test', 'config.yml')) }
 
   describe '#initialize' do
     before(:example) do
@@ -46,11 +45,19 @@ describe Template do
   end
 
   describe '#generate_passwords' do
-    it 'should generate passwords' do
+    it 'should generate passwords for neighbours' do
       sample = '!qaZ'
       template = Template.new(layout, sample)
       expect(template.generate_passwords).
         to eq([sample, '@wsX', '#edC', '$rfV', '%tgB', '^yhN', '&ujM', '*ik<', '(ol>', ')p;?'])
+    end
+
+    it 'should generate passwords for non-neighbours' do
+      sample = '1QAz@wsx3edC'
+      template = Template.new(layout, sample)
+      expect(template.generate_passwords).
+        to eq([sample, '2WSx#edc4rfV', '3EDc$rfv5tgB', '4RFv%tgb6yhN', '5TGb^yhn7ujM', 
+          '6YHn&ujm8ik<', '7UJm*ik,9ol>', '8IK,(ol.0p;?'])      
     end
   end
 
