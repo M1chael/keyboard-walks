@@ -59,6 +59,14 @@ describe Template do
         to eq([sample, '2WSx#edc4rfV', '3EDc$rfv5tgB', '4RFv%tgb6yhN', '5TGb^yhn7ujM', 
           '6YHn&ujm8ik<', '7UJm*ik,9ol>', '8IK,(ol.0p;?'])      
     end
+
+    it 'should generate passwords for same symbols' do
+      sample = '!1qazzaqQ'
+      template = Template.new(layout, sample)
+      expect(template.generate_passwords).
+        to eq([sample, '@2wsxxswW', '#3edccdeE', '$4rfvvfrR', '%5tgbbgtT', '^6yhnnhyY',
+          '&7ujmmjuU', '*8ik,,kiI', '(9ol..loO', ')0p;//;pP'])
+    end
   end
 
 end

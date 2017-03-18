@@ -33,9 +33,9 @@ class Layout
 	end
 
 	def get_symbol(symbol, way)
+		symbol = @layout.key?(symbol) ? symbol : unshift(symbol)
 		return symbol if way.direction.nil? && !way.shifted?
 		return @layout[symbol]['sh'] if way.direction.nil? && way.shifted?
-		symbol = @layout.key?(symbol) ? symbol : unshift(symbol)
 		if !way.direction.nil? && !way.shifted?
 			neighbour = get_neighbour(symbol, way.direction)
 			return neighbour.empty? ? nil : neighbour

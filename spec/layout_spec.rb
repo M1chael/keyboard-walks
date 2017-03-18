@@ -71,6 +71,10 @@ describe Layout do
       expect(layout.get_symbol('1', Way.new(shifted: true))).to eq('!')
     end
 
+    it 'should return unshifted itself' do
+      expect(layout.get_symbol('!', Way.new(shifted: false))).to eq('1')
+    end
+
     it 'should return not-shifted neighbour' do
       expect(layout.get_symbol('1', Way.new(direction: 'rd'))).to eq('q')
     end
