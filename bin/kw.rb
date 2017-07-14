@@ -5,7 +5,6 @@ require 'yaml'
 require_relative '../lib/layout.rb'
 require_relative '../lib/template.rb'
 require 'highline/import'
-require 'ruby-progressbar'
 
 WD = File.expand_path(File.dirname(__FILE__))
 layout = Layout.new(File.join(WD, '..', 'config', 'config.yml'))
